@@ -1,0 +1,53 @@
+version: "3.7"
+services:
+  web:
+    build:
+      args:
+        WEB_USER: ${WEB_USER}
+        WEB_GROUP: ${WEB_GROUP}
+        APACHE_ROOT_DIR: ${APACHE_ROOT_DIR}
+      context: ./
+      dockerfile: ./docker/app/Dockerfile
+    container_name: ${COMPOSE_PROJECT_NAME}-web
+    restart: unless-stopped
+    ports:
+      - "8002:80"
+    env_file:
+      - ./.env
+    working_dir: ${APACHE_ROOT_DIR}
+    environment:
+      - APACHE_ROOT_DIR=${APACHE_ROOT_DIR}
+      - APACHE_LOG_DIR=${APACHE_LOG_DIR}
+      - WEB_USER=${WEB_USER}
+      - WEB_GROUP=${WEB_GROUP}
+    volumes:
+      - ${PROJECT_DIR}:${APACHE_ROOT_DIR}
+      - ./docker/app/sites-enabled:/etc/apache2/sites-enabled/
+    links:
+      - db
+    networks:
+      - net
+  db:
+    image: mariadb:${DB_VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}-db
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3312:3306"
+    volumes:
+      - ./docker/db/mysql:/docker-entrypoint-initdb.d
+      - ./docker/db/dbdata:/var/lib/mysql
+      - ./docker/db/conf:/etc/mysql/conf.d
+    networks:
+      - net
+networks:
+  net:
+    driver: bridge
+volumes:
+  web-data:
+    external: false
