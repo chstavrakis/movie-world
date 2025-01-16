@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.lightblue {
+    --tw-text-opacity: 1;
+    color: #00baf7;
+}
+
+.bg-lightblue-600 {
+    --tw-bg-opacity: 1;
+    background-color: #00baf7;
+}
