@@ -12,6 +12,7 @@ services:
     restart: unless-stopped
     ports:
       - "8002:80"
+      - "8000:8000"
     env_file:
       - ./.env
     working_dir: ${APACHE_ROOT_DIR}
@@ -20,6 +21,7 @@ services:
       - APACHE_LOG_DIR=${APACHE_LOG_DIR}
       - WEB_USER=${WEB_USER}
       - WEB_GROUP=${WEB_GROUP}
+      - INSTALL_MYSQL_CLIENT=${INSTALL_MYSQL_CLIENT}
     volumes:
       - ${PROJECT_DIR}:${APACHE_ROOT_DIR}
       - ./docker/app/sites-enabled:/etc/apache2/sites-enabled/

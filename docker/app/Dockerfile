@@ -5,6 +5,7 @@ ARG WEB_USER
 ARG WEB_GROUP
 ARG APACHE_ROOT_DIR
 ARG APACHE_LOG_DIR
+ARG INSTALL_MYSQL_CLIENT
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -19,6 +20,9 @@ RUN apt-get update && apt-get install -y \
     sudo \
     iputils-ping \
     libmcrypt-dev
+
+RUN apt-get update \
+    && apt-get install -y default-mysql-client
 
 RUN pecl install -o -f redis \
 &&  rm -rf /tmp/pear \
@@ -41,7 +45,7 @@ RUN a2enmod headers
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install mysqli \
+RUN docker-php-ext-install mysqli pdo pdo_mysql \
     mbstring  \
     exif  \
     pcntl  \
