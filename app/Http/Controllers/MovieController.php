@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class MovieController extends Controller
 {
     /**
      * Display a listing of the movies.
      *
-     * @return \Illuminate\View\View
+     * @param Request $request
+     * @return View
      */
-    public function list(Request $request)
+    public function list(Request $request): View
     {
         $sort = $request->query('sort', '');
 
@@ -40,15 +43,24 @@ class MovieController extends Controller
 
         $movies = $movies->get();
 
+        // Get the authenticated user's ID
+        $userId = Auth::id();
+
+        // Add the user's vote to each movie
+        foreach ($movies as $movie) {
+            $userVote = $movie->votes()->where('user_id', $userId)->first();
+            $movie->user_vote = $userVote ? $userVote->vote : null;
+        }
+
         return view('movies.list', compact('movies', 'sort'));
     }
 
     /**
      * Show the form for creating a new movie.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         return view('movies.create');
     }
@@ -56,10 +68,10 @@ class MovieController extends Controller
     /**
      * Store a newly created movie in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'title' => 'required|string|max:255',

@@ -12,3 +12,8 @@
     --tw-bg-opacity: 1;
     background-color: #00baf7;
 }
+
+.bg-red-600 {
+    --tw-bg-opacity: 1;
+    background-color: #dc2626;
+}

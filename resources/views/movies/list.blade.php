@@ -19,10 +19,31 @@
                                             </div>
                                             <p class="mt-2">{{ $movie->description }}</p>
                                             <div class="mt-4 flex items-end">
-                                                <p class="text-sm text-gray-600">{{ $movie->likes_count }} likes | </p>
-                                                <p class="ml-1 text-sm text-gray-600">{{ $movie->hates_count }} hates</p>
+                                                <p class="text-sm text-gray-600">{{ $movie->likes_count }} {{ __('likes') }}| </p>
+                                                <p class="ml-1 text-sm text-gray-600">{{ $movie->hates_count }} {{ __('hates') }}</p>
+                                                @auth
+                                                    @if (Auth::id() !== $movie->user_id)
+                                                        <form method="POST" action="{{ route('movies.vote', $movie->id) }}" class="ml-4">
+                                                            @csrf
+                                                            <input type="hidden" name="vote" value="like">
+                                                            <button type="submit"
+                                                                    class="inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md shadow-sm {{ $movie->user_vote === 'like' ? 'bg-lightblue-600 text-white ': '' }}">
+                                                                {{ __('Like') }}
+                                                            </button>
+                                                        </form>
+                                                        <form method="POST" action="{{ route('movies.vote', $movie->id) }}" class="ml-2">
+                                                            @csrf
+                                                            <input type="hidden" name="vote" value="hate">
+                                                            <button type="submit"
+                                                                    class="inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md shadow-sm {{ $movie->user_vote === 'hate' ? 'bg-lightblue-600 text-white': '' }}">
+                                                                {{ __('Hate') }}
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                @endauth
                                                 <p class="mx-auto text-sm text-gray-600">
-                                                    Posted by: <a href="{{ route('movies.list') }}?author={{$movie->user->id}}" class="lightblue">{{ $movie->user->name }}</a>
+                                                    {{__('Posted by')}} <a href="{{ route('movies.list') }}?author={{$movie->user->id}}" class="lightblue">
+                                                        @if (Auth::id() !== $movie->user_id){{ $movie->user->name }}@else{{ __('You') }}@endif</a>
                                                 </p>
                                             </div>
                                         </div>

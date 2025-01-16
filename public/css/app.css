@@ -1039,6 +1039,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(238 242 255 / var(--tw-bg-opacity, 1));
 }
+.bg-red-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
+}
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
@@ -1303,12 +1307,18 @@ select {
 
 
 .lightblue {
+    --tw-text-opacity: 1;
     color: #00baf7;
 }
 
 .bg-lightblue-600 {
     --tw-bg-opacity: 1;
     background-color: #00baf7;
+}
+
+.bg-red-600 {
+    --tw-bg-opacity: 1;
+    background-color: #dc2626;
 }
 
 .hover\:border-gray-300:hover {
