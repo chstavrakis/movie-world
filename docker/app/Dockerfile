@@ -45,29 +45,7 @@ RUN a2enmod headers
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql \
-    mbstring  \
-    exif  \
-    pcntl  \
-    bcmath  \
-    gd  \
-    iconv
-
-
-#RUN pecl install xdebug \
-#    && docker-php-ext-enable xdebug && \
-#    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-#    && echo "xdebug.remote_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-
-# Fisrt you need to check and update teh path to your /usr/local/etc/php/php.ini
-RUN pecl install xdebug-2.9.2 && \
-    docker-php-ext-enable xdebug && \
-    echo "[xdebug]" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug-settings.ini && \
-    echo "xdebug.remote_enable = 1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug-settings.ini && \
-    echo "xdebug.remote_connect_back = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug-settings.ini && \
-    echo "xdebug.remote_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug-settings.ini && \
-    echo 'xdebug.idekey = "PHPSTORM"' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug-settings.ini &&\
-    cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use App\Models\Vote;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,8 @@ class VoteController extends Controller
      * @param Request $request
      * @param int $movieId
      * @return RedirectResponse
+     *
+     * @throws ModelNotFoundException
      */
     public function store(Request $request, int $movieId): RedirectResponse
     {
@@ -23,7 +26,7 @@ class VoteController extends Controller
             'vote' => 'required|in:like,hate',
         ]);
 
-        $movie = Movie::findOrFail($movieId);
+        $movie = Movie::query()->findOrFail($movieId);
 
         // Ensure the user is authenticated
         if (!Auth::check()) {
@@ -52,10 +55,11 @@ class VoteController extends Controller
         }
 
         // Create a new vote
-        $vote = new Vote();
-        $vote->user_id = Auth::id();
-        $vote->movie_id = $movieId;
-        $vote->vote = $request->input('vote');
+        $vote = new Vote([
+            'vote' => $request->input('vote'),
+            'user_id' => Auth::id(),
+            'movie_id' => $movieId,
+        ]);
         $vote->save();
 
         return redirect()->route('movies.list')->with('success', 'Your vote has been recorded.');

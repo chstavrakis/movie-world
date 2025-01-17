@@ -18,8 +18,10 @@ class MovieController extends Controller
      */
     public function list(Request $request): View
     {
+        // Get the sort parameter from the query string
         $sort = $request->query('sort', '');
 
+        // Get all movies with the user who created them
         $movies = Movie::with('user')
             ->withCount(['votes as likes_count' => function ($query) {
                 $query->where('vote', 'like');
@@ -28,6 +30,7 @@ class MovieController extends Controller
                 $query->where('vote', 'hate');
             }]);
 
+        // Sort the movies
         switch ($sort) {
             case 'likes':
                 $movies->orderBy('likes_count', 'desc');
@@ -41,6 +44,7 @@ class MovieController extends Controller
                 break;
         }
 
+        // Get the movies
         $movies = $movies->get();
 
         // Get the authenticated user's ID
@@ -78,10 +82,11 @@ class MovieController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $movie = new Movie();
-        $movie->title = $request->title;
-        $movie->description = $request->description;
-        $movie->user_id = Auth::id();
+        $movie = new Movie([
+            'title' => $request->title,
+            'description' => $request->description,
+            'user_id' => Auth::id()
+        ]);
         $movie->save();
 
         return redirect()->route('movies.list')->with('success', 'Movie added successfully.');
