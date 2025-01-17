@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Models\Movie;
 use App\Models\User;
 use App\Models\Vote;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutEvents;
 use Tests\TestCase;
 
@@ -14,7 +12,7 @@ class VoteControllerTest extends TestCase
 {
     use WithoutEvents;
 
-    public function test_store_vote(): void
+    public function testStoreVoteAction(): void
     {
         $user = User::factory()->create();
         $movie = Movie::factory()->create();
@@ -31,7 +29,7 @@ class VoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_unvote(): void
+    public function testUnvoteAction(): void
     {
         $user = User::factory()->create();
         $movie = Movie::factory()->create();
@@ -53,7 +51,7 @@ class VoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_update_vote(): void
+    public function testUpdateVoteAction(): void
     {
         $user = User::factory()->create();
         $movie = Movie::factory()->create();

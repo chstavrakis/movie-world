@@ -11,7 +11,7 @@ class MovieControllerTest extends TestCase
 {
     use WithoutEvents;
 
-    public function test_list_movies(): void
+    public function testListMoviesCanBeRendered(): void
     {
         $user = User::factory()->create();
         $movie = Movie::factory()->create(['user_id' => $user->id]);
@@ -22,7 +22,7 @@ class MovieControllerTest extends TestCase
         $response->assertSee($movie->title);
     }
 
-    public function test_list_movies_with_user_vote(): void
+    public function testListMoviesWithUserVoteCanBeRendered(): void
     {
         $user = User::factory()->create();
         $movie = Movie::factory()->withUserVote($user, 'like')->create(['user_id' => $user->id]);
